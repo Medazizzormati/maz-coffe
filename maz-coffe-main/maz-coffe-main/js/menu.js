@@ -20,15 +20,15 @@ function displayProducts(productsToDisplay) {
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
         productCard.innerHTML = `
-            <div class="product-image">
+            <div class="product-image" onclick="this.nextElementSibling.querySelector('.product-description').style.display = this.nextElementSibling.querySelector('.product-description').style.display === 'none' ? 'block' : 'none'" style="cursor: pointer;" title="Cliquez pour afficher/masquer la description">
                 <img src="${product.image}" alt="${product.name}" loading="lazy">
             </div>
             <div class="product-content">
                 <span class="product-category">${getCategoryLabel(product.category)}</span>
                 <h3 class="product-title">${product.name}</h3>
-                <p class="product-description">${product.description}</p>
+                <p class="product-description" style="display: none; transition: all 0.3s;">${product.description}</p>
                 <div class="product-footer">
-                    <span class="product-price">${product.price.toFixed(2)} €</span>
+                    <span class="product-price">${product.price.toFixed(2)} DT</span>
                     <button class="add-to-cart" data-id="${product.id}">
                         <i class="fas fa-cart-plus"></i> Ajouter
                     </button>
@@ -75,10 +75,10 @@ function initFilters() {
         // Mettre à jour les affichages
         function updatePriceDisplays() {
             if (minPriceDisplay) {
-                minPriceDisplay.textContent = `${minPriceSlider.value}€`;
+                minPriceDisplay.textContent = `${minPriceSlider.value}DT`;
             }
             if (maxPriceDisplay) {
-                maxPriceDisplay.textContent = `${maxPriceSlider.value}€`;
+                maxPriceDisplay.textContent = `${maxPriceSlider.value}DT`;
             }
             applyFilters();
         }
@@ -219,7 +219,7 @@ function updateCartDisplay() {
 
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = '<p class="empty-cart">Votre panier est vide</p>';
-        cartTotalElement.textContent = '0.00 €';
+        cartTotalElement.textContent = '0.00 DT';
         return;
     }
 
@@ -237,7 +237,7 @@ function updateCartDisplay() {
         cartItem.innerHTML = `
             <div class="cart-item-info">
                 <div class="cart-item-name">${item.name}</div>
-                <div class="cart-item-price">${item.price.toFixed(2)} €</div>
+                <div class="cart-item-price">${item.price.toFixed(2)} DT</div>
             </div>
             <div class="cart-item-actions">
                 <button class="quantity-btn decrease" data-id="${item.id}" aria-label="Diminuer la quantité">
@@ -256,7 +256,7 @@ function updateCartDisplay() {
     });
 
     // Mettre à jour le total
-    cartTotalElement.textContent = `${total.toFixed(2)} €`;
+    cartTotalElement.textContent = `${total.toFixed(2)} DT`;
 
     // Ajouter les événements pour les boutons du panier
     document.querySelectorAll('.decrease').forEach(button => {

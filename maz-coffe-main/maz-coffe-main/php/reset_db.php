@@ -27,3 +27,4 @@ if (mysqli_query($conn, "CREATE DATABASE $dbname")) {
 
 mysqli_close($conn);
 ?>
+

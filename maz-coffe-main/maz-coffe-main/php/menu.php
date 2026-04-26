@@ -8,7 +8,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     $row['price'] = (float) $row['price'];
     $row['id'] = (int) $row['id'];
     $row['popularity'] = 50; 
-    $row['image'] = empty($row['image']) ? 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400' : 'images/' . $row['image'];
+    $row['image'] = empty($row['image']) ? 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400' : (strpos($row['image'], 'http') === 0 ? $row['image'] : '../images/' . $row['image']);
     $db_products[] = $row;
 }
 ?>
@@ -28,8 +28,8 @@ while ($row = mysqli_fetch_assoc($result)) {
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="css/styles.css?v=2.0" />
-    <link rel="stylesheet" href="css/filter-styles.css" />
+    <link rel="stylesheet" href="../css/styles.css?v=2.0" />
+    <link rel="stylesheet" href="../css/filter-styles.css" />
   </head>
 
   <body>
@@ -38,7 +38,7 @@ while ($row = mysqli_fetch_assoc($result)) {
       <div class="container">
         <div class="logo">
           <a href="index.php">
-                <img src="images/img/M.A.Z.png" id="photo" alt="Logo M.A.Z Coffee House">
+                <img src="../images/img/M.A.Z.png" id="photo" alt="Logo M.A.Z Coffee House">
             </a>
           <h1>M.A.Z Coffee House</h1>
         </div>
@@ -169,9 +169,9 @@ while ($row = mysqli_fetch_assoc($result)) {
                 <h4>Prix</h4>
                 <div class="price-filter">
                   <div class="price-range-display">
-                    <span id="min-price-display">0€</span>
+                    <span id="min-price-display">0DT</span>
                     <span>-</span>
-                    <span id="max-price-display">10€</span>
+                    <span id="max-price-display">10DT</span>
                   </div>
                   <div class="price-inputs">
                     <input
@@ -217,12 +217,13 @@ while ($row = mysqli_fetch_assoc($result)) {
     <!-- PANNEAU PANIER COULISSANT -->
     <?php include 'cart_panel.php'; ?>
 
-    <script src="js/shared.js"></script>
+    <script src="../js/shared.js"></script>
     <script>
         // Override the static products with the database products
         products = <?php echo json_encode($db_products); ?>;
     </script>
-    <script src="js/menu.js"></script>
+    <script src="../js/menu.js"></script>
   </body>
 </html>
+
 

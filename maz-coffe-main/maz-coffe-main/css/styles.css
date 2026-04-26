@@ -483,6 +483,60 @@ button {
     color: white;
 }
 
+/* Payment Methods Selection Styles */
+.payment-methods-selection {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #fdfdfd;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.selection-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.method-options {
+    display: flex;
+    gap: 10px;
+}
+
+.method-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #888;
+}
+
+.method-option i {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.method-option:hover {
+    border-color: #D4A76A;
+    color: #D4A76A;
+}
+
+.method-option.active {
+    border-color: #8B4513;
+    background-color: #fdf5e6;
+    color: #8B4513;
+}
+
 /* ===== HAMBURGER MENU ===== */
 .hamburger {
     display: none;

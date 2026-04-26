@@ -261,11 +261,12 @@ async function checkout() {
         return;
     }
 
-    // Afficher un message de chargement
+    // Afficher un message de chargement (Reload/Loading state)
     const checkoutBtn = document.getElementById('checkout-button');
     const originalBtnContent = checkoutBtn.innerHTML;
     checkoutBtn.disabled = true;
-    checkoutBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Traitement...';
+    checkoutBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Chargement...';
+    checkoutBtn.style.opacity = '0.7';
 
     try {
         const response = await fetch('konnect_payment.php', {
@@ -281,20 +282,18 @@ async function checkout() {
         const result = await response.json();
 
         if (result.payUrl) {
-            // Vider le panier localement immédiatement
+            // Message de succès et redirection immédiate
+            checkoutBtn.innerHTML = '<i class="fas fa-check"></i> Redirection...';
+            checkoutBtn.style.backgroundColor = '#28a745';
+            
+            // Vider le panier localement
             cart = [];
             localStorage.removeItem('cafeCart');
             updateCartCount();
-            updateCartPanel();
+            if (typeof updateCartPanel === 'function') updateCartPanel();
 
-            // Message de succès et temporisation avant redirection
-            checkoutBtn.innerHTML = '<i class="fas fa-check"></i> Prêt ! Redirection...';
-            showNotification('Préparation du paiement en cours...');
-
-            // Attendre 1.5 seconde avant de rediriger
-            setTimeout(() => {
-                window.location.href = result.payUrl;
-            }, 1500);
+            // Rediriger vers Konnect
+            window.location.href = result.payUrl;
         } else {
             alert('Erreur lors de l\'initialisation du paiement: ' + (result.error || 'Erreur inconnue'));
             checkoutBtn.disabled = false;
@@ -311,12 +310,10 @@ async function checkout() {
 function clearCart() {
     if (cart.length === 0) return;
 
-    if (confirm('Voulez-vous vraiment vider votre panier ?')) {
-        cart = [];
-        localStorage.removeItem('cafeCart');
-        updateCartCount();
-        showNotification('Panier vidé');
-    }
+    cart = [];
+    localStorage.removeItem('cafeCart');
+    updateCartCount();
+    showNotification('Panier vidé');
 }
 
 // ===== FONCTIONS DU PANIER COULISSANT =====
@@ -390,7 +387,7 @@ function updateCartPanel() {
                 <p class="small-text">Ajoutez des produits depuis notre menu !</p>
             </div>
         `;
-        cartTotalAmount.textContent = '0.00 €';
+        cartTotalAmount.textContent = '0.00 DT';
         return;
     }
 
@@ -413,7 +410,7 @@ function updateCartPanel() {
                 <img src="${productImage}" alt="${item.name}" class="cart-item-image">
                 <div class="cart-item-details">
                     <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">${item.price.toFixed(2)} €</div>
+                    <div class="cart-item-price">${item.price.toFixed(2)} DT</div>
                     <div class="cart-item-quantity">
                         <button class="quantity-btn decrease" data-id="${item.id}" aria-label="Diminuer la quantité">
                             <i class="fas fa-minus"></i>
@@ -434,7 +431,7 @@ function updateCartPanel() {
     cartHTML += '</div>';
 
     cartBody.innerHTML = cartHTML;
-    cartTotalAmount.textContent = `${total.toFixed(2)} €`;
+    cartTotalAmount.textContent = `${total.toFixed(2)} DT`;
 
     // Ajouter les événements pour les boutons dans le panier
     document.querySelectorAll('.decrease').forEach(button => {

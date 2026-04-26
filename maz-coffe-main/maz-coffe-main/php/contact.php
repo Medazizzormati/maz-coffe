@@ -11,7 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css?v=2.0">
+    <link rel="stylesheet" href="../css/styles.css?v=2.0">
 </head>
 
 <body>
@@ -20,7 +20,7 @@
         <div class="container">
             <div class="logo">
                 <a href="index.php">
-                <img src="images/img/M.A.Z.png" id="photo" alt="Logo M.A.Z Coffee House">
+                <img src="../images/img/M.A.Z.png" id="photo" alt="Logo M.A.Z Coffee House">
             </a>
                 <h1>M.A.Z Coffee House</h1>
             </div>
@@ -131,8 +131,9 @@
     <!-- Footer -->
     <?php include 'footer.php'; ?>
 
-    <script src="js/shared.js"></script>
-    <script src="js/contact.js"></script>
+    <script src="../js/shared.js"></script>
+    <script src="../js/contact.js"></script>
 </body>
 </html>
+
 

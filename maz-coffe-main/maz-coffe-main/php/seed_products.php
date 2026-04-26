@@ -66,3 +66,4 @@ foreach ($products as $p) {
 
 echo "Seeding complete.\n";
 ?>
+

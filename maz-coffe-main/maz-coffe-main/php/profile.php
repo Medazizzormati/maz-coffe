@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
         if (in_array($file_type, $allowed_types) && $file_size < 5 * 1024 * 1024) {
             $ext = pathinfo($_FILES['profile_image_file']['name'], PATHINFO_EXTENSION);
             $new_filename = 'user_' . $user_id . '_' . time() . '.' . $ext;
-            $upload_path = 'images/' . $new_filename;
+            $upload_path = '../images/' . $new_filename;
 
             if (move_uploaded_file($_FILES['profile_image_file']['tmp_name'], $upload_path)) {
                 $profile_image = $new_filename;
@@ -74,7 +74,7 @@ $user_data = mysqli_fetch_assoc($res);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Profil - M.A.Z Coffee House</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css?v=3.1">
+    <link rel="stylesheet" href="../css/styles.css?v=3.1">
     <style>
         :root {
             --primary-color: #8B4513;
@@ -170,7 +170,7 @@ $user_data = mysqli_fetch_assoc($res);
     <header class="header">
         <div class="container">
             <div class="logo">
-                <a href="index.php"><img src="images/img/M.A.Z.png" id="photo" alt="Logo"></a>
+                <a href="index.php"><img src="../images/img/M.A.Z.png" id="photo" alt="Logo"></a>
                 <h1>M.A.Z Coffee House</h1>
             </div>
             <nav class="navbar">
@@ -201,7 +201,7 @@ $user_data = mysqli_fetch_assoc($res);
 
             <form action="profile.php" method="POST" enctype="multipart/form-data">
                 <div class="profile-pic-preview-container">
-                    <img id="image_preview" src="images/<?php echo htmlspecialchars($user_data['profile_image'] ?? 'default_avatar.jpg'); ?>" alt="Profil Image" onerror="this.src='images/default_avatar.jpg';">
+                    <img id="image_preview" src="../images/<?php echo htmlspecialchars($user_data['profile_image'] ?? 'default_avatar.jpg'); ?>" alt="Profil Image" onerror="this.src='../images/default_avatar.jpg';">
                 </div>
                 
                 <div class="file-upload-wrapper">
@@ -247,5 +247,6 @@ $user_data = mysqli_fetch_assoc($res);
     </script>
 </body>
 </html>
+
 
 

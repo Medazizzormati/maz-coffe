@@ -59,7 +59,7 @@ if ($result) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css?v=3.1">
+    <link rel="stylesheet" href="../css/styles.css?v=3.1">
 </head>
 <body>
 
@@ -67,7 +67,7 @@ if ($result) {
     <header class="header">
         <div class="container">
             <div class="logo">
-                <a href="index.php"><img src="images/img/M.A.Z.png" id="photo" alt="Logo"></a>
+                <a href="index.php"><img src="../images/img/M.A.Z.png" id="photo" alt="Logo"></a>
                 <h1>Administration</h1>
             </div>
             <nav class="navbar">
@@ -84,7 +84,7 @@ if ($result) {
             <!-- Sidebar -->
             <aside class="admin-sidebar">
                 <div class="admin-profile-block">
-                    <img src="images/<?php echo htmlspecialchars($_SESSION['profile_image'] ?? 'default_avatar.jpg'); ?>" alt="Admin Profile" onerror="this.src='images/default_avatar.jpg';">
+                    <img src="../images/<?php echo htmlspecialchars($_SESSION['profile_image'] ?? 'default_avatar.jpg'); ?>" alt="Admin Profile" onerror="this.src='../images/default_avatar.jpg';">
                     <div class="admin-profile-info">
                         <strong>
                             <?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?>
@@ -194,9 +194,10 @@ if ($result) {
         </div>
     </main>
 
-    <script src="js/shared.js"></script>
-    <script src="js/admin.js?v=1.1"></script>
+    <script src="../js/shared.js"></script>
+    <script src="../js/admin.js?v=1.1"></script>
 </body>
 </html>
+
 
 

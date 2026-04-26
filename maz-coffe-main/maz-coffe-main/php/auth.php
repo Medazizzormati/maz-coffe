@@ -53,7 +53,7 @@ if (isset($_POST['signup'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authentification - M.A.Z Coffee House</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css?v=2.0">
+    <link rel="stylesheet" href="../css/styles.css?v=2.0">
     <style>
         :root {
             --primary-color: #8B4513;
@@ -163,7 +163,7 @@ if (isset($_POST['signup'])) {
     <header class="header">
         <div class="container">
             <div class="logo">
-                <a href="index.php"><img src="images/img/M.A.Z.png" id="photo" alt="Logo M.A.Z Coffee House"></a>
+                <a href="index.php"><img src="../images/img/M.A.Z.png" id="photo" alt="Logo M.A.Z Coffee House"></a>
                 <h1>M.A.Z Coffee House</h1>
             </div>
             <nav class="navbar">
@@ -278,5 +278,6 @@ if (isset($_POST['signup'])) {
     </script>
 </body>
 </html>
+
 
 

@@ -19,7 +19,7 @@
     <div class="cart-footer">
         <div class="cart-total">
             <span>Total:</span>
-            <span class="cart-total-amount" id="cart-total-amount">0.00 €</span>
+            <span class="cart-total-amount" id="cart-total-amount">0.00 DT</span>
         </div>
 
         <button class="checkout-button" id="checkout-button">
@@ -30,3 +30,4 @@
         </button>
     </div>
 </div>
+

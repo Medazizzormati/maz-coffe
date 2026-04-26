@@ -8,3 +8,4 @@ define('KONNECT_API_URL', 'https://api.sandbox.konnect.network/api/v2/');
 // Currency configuration
 define('PAYMENT_CURRENCY', 'TND'); // Code uses Euro symbols but we'll process in TND for Konnect
 ?>
+

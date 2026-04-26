@@ -31,7 +31,7 @@ if (isset($_POST['add_product']) && isAdminLoggedIn()) {
     $newImageName = '';
 
     if ($imageFile) {
-        $uploadDir = 'images/';
+        $uploadDir = '../images/';
         $imageExt = strtolower(pathinfo($imageFile, PATHINFO_EXTENSION));
         $newImageName = time() . '_' . rand(1000, 9999) . '.' . $imageExt;
         move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $newImageName);
@@ -75,7 +75,7 @@ if (isset($_POST['update_product']) && isAdminLoggedIn()) {
     
     $imageFile = $_FILES['image']['name'];
     if ($imageFile) {
-        $uploadDir = 'images/';
+        $uploadDir = '../images/';
         $imageExt = strtolower(pathinfo($imageFile, PATHINFO_EXTENSION));
         $newImageName = time() . '_' . rand(1000, 9999) . '.' . $imageExt;
         move_uploaded_file($_FILES['image']['tmp_name'], $uploadDir . $newImageName);
@@ -111,8 +111,8 @@ if (isset($_GET['delete_id']) && isAdminLoggedIn()) {
     // Optional: unlink image
     $res = mysqli_query($conn, "SELECT image FROM products WHERE id=$id");
     $row = mysqli_fetch_assoc($res);
-    if ($row && $row['image'] && file_exists('images/'.$row['image'])) {
-        unlink('images/'.$row['image']);
+    if ($row && $row['image'] && file_exists('../images/'.$row['image'])) {
+        unlink('../images/'.$row['image']);
     }
     
     $success = mysqli_query($conn, "DELETE FROM products WHERE id=$id");
@@ -159,7 +159,7 @@ if (isAdminLoggedIn()) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css?v=3.1">
+    <link rel="stylesheet" href="../css/styles.css?v=3.1">
 </head>
 <body class="<?php echo !isAdminLoggedIn() ? 'admin-login-body' : ''; ?>">
 
@@ -167,7 +167,7 @@ if (isAdminLoggedIn()) {
         <!-- LOGIN VIEW -->
         <div class="admin-login-wrapper">
             <div class="admin-login-card">
-                <a href="index.php"><img src="images/img/M.A.Z.png" width="80" alt="Logo" style="margin-bottom: 20px;"></a>
+                <a href="index.php"><img src="../images/img/M.A.Z.png" width="80" alt="Logo" style="margin-bottom: 20px;"></a>
                 <h2>Portail Admin</h2>
                 <?php if(isset($error)): ?>
                     <p style="color: #e74c3c; margin-bottom: 20px; font-weight: 600;"><?php echo $error; ?></p>
@@ -179,7 +179,7 @@ if (isAdminLoggedIn()) {
                     </div>
                     <div class="form-group">
                         <label>Mot de passe</label>
-                        <input type="password" name="password" required placeholder="••••••••">
+                        <input type="password" name="password" required placeholder="�DT��DT��DT��DT��DT��DT��DT��DT�">
                     </div>
                     <button type="submit" name="admin_login" class="btn-admin-add" style="width: 100%;">Se connecter</button>
                 </form>
@@ -191,7 +191,7 @@ if (isAdminLoggedIn()) {
         <header class="header">
             <div class="container">
                 <div class="logo">
-                    <a href="index.php"><img src="images/img/M.A.Z.png" id="photo" alt="Logo"></a>
+                    <a href="index.php"><img src="../images/img/M.A.Z.png" id="photo" alt="Logo"></a>
                     <h1>Administration</h1>
                 </div>
                 <nav class="navbar">
@@ -208,7 +208,7 @@ if (isAdminLoggedIn()) {
                 <!-- Sidebar -->
                 <aside class="admin-sidebar">
                     <div class="admin-profile-block">
-                        <img src="images/<?php echo htmlspecialchars($_SESSION['profile_image'] ?? 'default_avatar.jpg'); ?>" alt="Admin Profile" onerror="this.src='images/default_avatar.jpg';">
+                        <img src="../images/<?php echo htmlspecialchars($_SESSION['profile_image'] ?? 'default_avatar.jpg'); ?>" alt="Admin Profile" onerror="this.src='../images/default_avatar.jpg';">
                         <div class="admin-profile-info">
                             <strong>
                                 <?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?>
@@ -282,14 +282,21 @@ if (isAdminLoggedIn()) {
                                     <?php foreach ($products as $p): ?>
                                     <tr>
                                         <td>
-                                            <img src="images/<?php echo $p['image']; ?>" alt="" class="table-img" onerror="this.src='img/placeholder.png'">
+                                            <img src="<?php echo (strpos($p['image'], 'http') === 0) ? $p['image'] : '../images/' . $p['image']; ?>" alt="" class="table-img" onerror="this.src='../images/default_avatar.jpg'">
                                         </td>
                                         <td>
                                             <div class="prod-name"><?php echo htmlspecialchars($p['name']); ?></div>
-                                            <div style="font-size: 0.8rem; color: #999; max-width: 200px;"><?php echo htmlspecialchars(substr($p['description'], 0, 40)); ?>...</div>
+                                            <div class="desc-toggle" style="font-size: 0.8rem; color: #999; max-width: 250px; cursor: pointer;" title="Cliquez pour afficher/masquer la description" onclick="const s=this.querySelector('.desc-short'),f=this.querySelector('.desc-full'); if(s&&f){ s.style.display=s.style.display==='none'?'inline':'none'; f.style.display=f.style.display==='none'?'inline':'none'; }">
+                                                <?php if(strlen($p['description']) > 40): ?>
+                                                    <span class="desc-short"><?php echo htmlspecialchars(substr($p['description'], 0, 40)); ?>...</span>
+                                                    <span class="desc-full" style="display: none;"><?php echo htmlspecialchars($p['description']); ?></span>
+                                                <?php else: ?>
+                                                    <span><?php echo htmlspecialchars($p['description']); ?></span>
+                                                <?php endif; ?>
+                                            </div>
                                         </td>
                                         <td><span class="prod-cat"><?php echo htmlspecialchars($p['category']); ?></span></td>
-                                        <td><span class="prod-price"><?php echo $p['price']; ?>€</span></td>
+                                        <td><span class="prod-price"><?php echo $p['price']; ?>DT</span></td>
                                         <td>
                                             <div class="action-btns">
                                                 <button class="action-btn edit-btn" onclick='openDrawer("edit", <?php echo json_encode($p); ?>)'>
@@ -337,7 +344,7 @@ if (isAdminLoggedIn()) {
                 </div>
 
                 <div class="form-group">
-                    <label>Prix (€)</label>
+                    <label>Prix (DT)</label>
                     <input type="number" step="0.01" name="price" id="form_price" required placeholder="2.50">
                 </div>
 
@@ -386,7 +393,7 @@ if (isAdminLoggedIn()) {
                     
                     if (data.image) {
                         const preview = document.getElementById('imagePreview');
-                        preview.src = 'images/' + data.image;
+                        preview.src = data.image.startsWith('http') ? data.image : '../images/' + data.image;
                         preview.style.display = 'block';
                     }
                 } else {
@@ -418,11 +425,12 @@ if (isAdminLoggedIn()) {
                 }
             }
         </script>
-        <script src="js/shared.js"></script>
-        <script src="js/admin.js?v=1.1"></script>
+        <script src="../js/shared.js"></script>
+        <script src="../js/admin.js?v=1.1"></script>
 
     <?php endif; ?>
 </body>
 </html>
+
 
 

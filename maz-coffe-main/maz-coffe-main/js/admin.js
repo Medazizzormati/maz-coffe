@@ -181,3 +181,4 @@ async function refreshProductTable() {
         console.error('Error refreshing table:', error);
     }
 }
+

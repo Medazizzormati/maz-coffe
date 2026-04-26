@@ -51,6 +51,21 @@ $products_query = "CREATE TABLE IF NOT EXISTS products (
 )";
 mysqli_query($conn, $products_query);
 
+// AUTO-SETUP: Create orders table if not exists
+$orders_query = "CREATE TABLE IF NOT EXISTS orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL,
+    payment_ref VARCHAR(255) NOT NULL UNIQUE,
+    amount DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending',
+    payment_method VARCHAR(50) NOT NULL,
+    user_email VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+)";
+mysqli_query($conn, $orders_query);
+
 // Check if any admin exists
 $admin_check = mysqli_query($conn, "SELECT * FROM users WHERE role = 'admin'");
 if (mysqli_num_rows($admin_check) == 0) {
@@ -61,5 +76,6 @@ if (mysqli_num_rows($admin_check) == 0) {
     mysqli_query($conn, $insert_admin);
 }
 ?>
+
 
 
