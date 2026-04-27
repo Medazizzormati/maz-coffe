@@ -16,7 +16,7 @@
         </mxCell>
         
         <!-- Class: Order -->
-        <mxCell id="order" value="Order&#xa;--&#xa;+ id: int&#xa;+ user_id: int&#xa;+ payment_ref: string&#xa;+ amount: decimal&#xa;+ status: string&#xa;+ user_email: string&#xa;--&#xa;+ create()&#xa;+ updateStatus()" style="shape=rect;html=1;whiteSpace=wrap;align=left;spacingLeft=10;" vertex="1" parent="1">
+        <mxCell id="order" value="Order&#xa;--&#xa;+ id: int&#xa;+ user_id: int&#xa;+ payment_ref: string&#xa;+ amount: decimal (TND)&#xa;+ status: string&#xa;+ user_email: string&#xa;--&#xa;+ create()&#xa;+ updateStatus()" style="shape=rect;html=1;whiteSpace=wrap;align=left;spacingLeft=10;" vertex="1" parent="1">
           <mxGeometry x="300" y="320" width="180" height="160" as="geometry" />
         </mxCell>
         
