@@ -63,7 +63,7 @@ if (isset($_POST['signup'])) {
             max-width: 450px;
             margin: 60px auto;
             padding: 40px;
-            background: #fff;
+            background: var(--card-bg);
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             position: relative;
@@ -73,7 +73,8 @@ if (isset($_POST['signup'])) {
         /* Toggle Switch Styling */
         .auth-toggle {
             display: flex;
-            background: #f0f0f0;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
             border-radius: 50px;
             margin-bottom: 30px;
             position: relative;
@@ -120,13 +121,15 @@ if (isset($_POST['signup'])) {
         }
 
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color); }
         .form-group input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
+            background: var(--input-bg);
+            color: var(--text-color);
             transition: border-color 0.3s;
         }
         .form-group input:focus {
@@ -176,6 +179,9 @@ if (isset($_POST['signup'])) {
                             <a href="auth.php?mode=login" class="<?php echo ($mode == 'login' || !$mode) ? 'active' : ''; ?>">Connexion</a>
                             <a href="auth.php?mode=signup" class="<?php echo ($mode == 'signup') ? 'active' : ''; ?>">Inscription</a>
                         </div>
+                    </li>
+                    <li id="theme-toggle" style="margin-left: 15px; cursor: pointer;">
+                        <i class="fas fa-moon" style="font-size: 1.3rem; color: var(--primary-color);"></i>
                     </li>
                 </ul>
             </nav>
@@ -240,6 +246,7 @@ if (isset($_POST['signup'])) {
 
     <?php include 'footer.php'; ?>
 
+    <script src="../js/theme.js"></script>
     <script>
         function setMode(mode) {
             const body = document.body;

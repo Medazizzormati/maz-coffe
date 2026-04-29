@@ -24,7 +24,7 @@ if (isset($_POST['admin_login'])) {
 if (isset($_POST['add_product']) && isAdminLoggedIn()) {
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $category = mysqli_real_escape_string($conn, $_POST['category']);
-    $price = $_POST['price'];
+    $price = floatval($_POST['price']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     
     $imageFile = $_FILES['image']['name'];
@@ -70,7 +70,7 @@ if (isset($_POST['update_product']) && isAdminLoggedIn()) {
     $id = intval($_POST['id']);
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $category = mysqli_real_escape_string($conn, $_POST['category']);
-    $price = $_POST['price'];
+    $price = floatval($_POST['price']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     
     $imageFile = $_FILES['image']['name'];
@@ -179,7 +179,7 @@ if (isAdminLoggedIn()) {
                     </div>
                     <div class="form-group">
                         <label>Mot de passe</label>
-                        <input type="password" name="password" required placeholder="�DT��DT��DT��DT��DT��DT��DT��DT�">
+                        <input type="password" name="password" required placeholder="*********">
                     </div>
                     <button type="submit" name="admin_login" class="btn-admin-add" style="width: 100%;">Se connecter</button>
                 </form>
@@ -231,6 +231,9 @@ if (isAdminLoggedIn()) {
                         <i class="fas fa-external-link-alt"></i> Voir le Site
                     </a>
                     <hr style="border: none; border-top: 1px solid #eee; margin: 15px 0;">
+                    <a href="#" id="theme-toggle" class="admin-nav-item" style="cursor: pointer;">
+                        <i class="fas fa-moon"></i> Changer de Thème
+                    </a>
                     <a href="logout.php" class="admin-nav-item" style="color: #e74c3c;">
                         <i class="fas fa-power-off"></i> Déconnexion
                     </a>
@@ -345,7 +348,7 @@ if (isAdminLoggedIn()) {
 
                 <div class="form-group">
                     <label>Prix (DT)</label>
-                    <input type="number" step="0.01" name="price" id="form_price" required placeholder="2.50">
+                    <input type="number" step="0.01" min="0.01" name="price" id="form_price" required placeholder="2.50">
                 </div>
 
                 <div class="form-group">
@@ -426,11 +429,9 @@ if (isAdminLoggedIn()) {
             }
         </script>
         <script src="../js/shared.js"></script>
+        <script src="../js/theme.js"></script>
         <script src="../js/admin.js?v=1.1"></script>
 
     <?php endif; ?>
 </body>
 </html>
-
-
-

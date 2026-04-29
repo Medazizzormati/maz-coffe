@@ -18,7 +18,7 @@ session_start();
     <style>
         .dynamic-products-section {
             padding: 40px 0;
-            background-color: #f9f9f9;
+            background-color: var(--bg-color);
         }
         .products-grid {
             display: grid;
@@ -60,6 +60,9 @@ session_start();
                         </li>
                     <?php endif; ?>
                     
+                    <li id="theme-toggle" style="margin-left: 15px; cursor: pointer;">
+                        <i class="fas fa-moon" style="font-size: 1.3rem; color: var(--primary-color);"></i>
+                    </li>
                     <li class="cart-icon-container" id="cart-nav" style="margin-left: 15px;">
                         <i class="fas fa-shopping-basket cart-icon"></i>
                         <span class="cart-badge hidden" id="cart-count">0</span>
@@ -174,6 +177,10 @@ session_start();
     <?php include 'cart_panel.php'; ?>
 
     <!-- Scripts -->
+    <script>
+        const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+    </script>
+    <script src="../js/theme.js"></script>
     <script src="../js/shared.js"></script>
     <script src="../js/index.js"></script>
 </body>

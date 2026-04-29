@@ -38,6 +38,7 @@ function loginUser($email, $password) {
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role'];
             $_SESSION['profile_image'] = isset($row['profile_image']) ? $row['profile_image'] : 'default_avatar.jpg';
+            $_SESSION['last_activity'] = time(); // Initialize activity timer
             return $row['role'];
         }
     }

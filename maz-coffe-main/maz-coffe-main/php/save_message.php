@@ -1,10 +1,11 @@
 <?php
-// save_message.php
+session_start();
 include_once 'db.php';
 
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_id = isset($_SESSION['user_id']) ? intval($_SESSION['user_id']) : 'NULL';
     $name = mysqli_real_escape_string($conn, $_POST['name']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $message = mysqli_real_escape_string($conn, $_POST['message']);
@@ -14,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $query = "INSERT INTO contact_messages (name, email, message) VALUES ('$name', '$email', '$message')";
+    $query = "INSERT INTO contact_messages (user_id, name, email, message) VALUES ($user_id, '$name', '$email', '$message')";
 
     if (mysqli_query($conn, $query)) {
         echo json_encode(['status' => 'success', 'message' => 'Votre message a été envoyé avec succès.']);

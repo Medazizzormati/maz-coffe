@@ -256,6 +256,13 @@ function removeFromCart(productId) {
 }
 
 async function checkout() {
+    // Check if user is logged in
+    if (typeof isLoggedIn === 'undefined' || !isLoggedIn) {
+        alert('Veuillez vous connecter pour passer une commande.');
+        window.location.href = 'auth.php?mode=login';
+        return;
+    }
+
     if (cart.length === 0) {
         alert('Votre panier est vide. Ajoutez des produits avant de commander.');
         return;
@@ -292,8 +299,10 @@ async function checkout() {
             updateCartCount();
             if (typeof updateCartPanel === 'function') updateCartPanel();
 
-            // Rediriger vers Konnect
-            window.location.href = result.payUrl;
+            // Rediriger vers Konnect avec une petite temporisation pour assurer la stabilité
+            setTimeout(() => {
+                window.location.assign(result.payUrl);
+            }, 100);
         } else {
             alert('Erreur lors de l\'initialisation du paiement: ' + (result.error || 'Erreur inconnue'));
             checkoutBtn.disabled = false;
@@ -461,14 +470,13 @@ function updateCartPanel() {
         });
     });
 }
-function checkoutFromPanel() {
+async function checkoutFromPanel() {
     if (cart.length === 0) {
         alert('Votre panier est vide. Ajoutez des produits avant de commander.');
         return;
     }
 
-    closeCartPanel();
-    checkout();
+    await checkout();
 }
 
 function clearCartFromPanel() {

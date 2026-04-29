@@ -29,6 +29,15 @@ if (isset($_GET['delete_id'])) {
     exit;
 }
 
+// Handle Promote User to Admin
+if (isset($_GET['promote_id'])) {
+    $id = intval($_GET['promote_id']);
+    $success = mysqli_query($conn, "UPDATE users SET role='admin' WHERE id=$id");
+    
+    header("Location: admin_users.php?msg=" . urlencode("Utilisateur promu en Administrateur !"));
+    exit;
+}
+
 // Fetch dashboard statistics
 $res = mysqli_query($conn, "SELECT COUNT(*) as count FROM products");
 $total_products = mysqli_fetch_assoc($res)['count'];
@@ -107,6 +116,9 @@ if ($result) {
                     <i class="fas fa-external-link-alt"></i> Voir le Site
                 </a>
                 <hr style="border: none; border-top: 1px solid #eee; margin: 15px 0;">
+                <a href="#" id="theme-toggle" class="admin-nav-item" style="cursor: pointer;">
+                    <i class="fas fa-moon"></i> Changer de Thème
+                </a>
                 <a href="logout.php" class="admin-nav-item" style="color: #e74c3c;">
                     <i class="fas fa-power-off"></i> Déconnexion
                 </a>
@@ -170,6 +182,9 @@ if ($result) {
                                     <td>
                                         <div class="action-btns">
                                             <?php if($u['role'] !== 'admin'): ?>
+                                                <a href="admin_users.php?promote_id=<?php echo $u['id']; ?>" class="action-btn edit-btn" title="Promouvoir Admin" style="background: #fdf5e6; color: #D4A76A;">
+                                                    <i class="fas fa-shield-alt"></i>
+                                                </a>
                                                 <a href="admin_users.php?delete_id=<?php echo $u['id']; ?>" class="action-btn delete-btn" title="Supprimer">
                                                     <i class="fas fa-trash"></i>
                                                 </a>
@@ -195,6 +210,7 @@ if ($result) {
     </main>
 
     <script src="../js/shared.js"></script>
+    <script src="../js/theme.js"></script>
     <script src="../js/admin.js?v=1.1"></script>
 </body>
 </html>

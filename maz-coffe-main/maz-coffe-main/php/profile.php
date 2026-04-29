@@ -66,6 +66,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_profile'])) {
 // Fetch current user details directly from DB for the form
 $res = mysqli_query($conn, "SELECT * FROM users WHERE id=$user_id");
 $user_data = mysqli_fetch_assoc($res);
+
+// Fetch user orders
+$orders_res = mysqli_query($conn, "SELECT * FROM orders WHERE user_id=$user_id OR user_email='{$user_data['email']}' ORDER BY created_at DESC");
+$orders = [];
+while ($row = mysqli_fetch_assoc($orders_res)) {
+    $orders[] = $row;
+}
+
+// Fetch user messages
+$messages_res = mysqli_query($conn, "SELECT * FROM contact_messages WHERE user_id=$user_id OR email='{$user_data['email']}' ORDER BY created_at DESC");
+$messages = [];
+while ($row = mysqli_fetch_assoc($messages_res)) {
+    $messages[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -84,7 +98,7 @@ $user_data = mysqli_fetch_assoc($res);
             max-width: 600px;
             margin: 60px auto;
             padding: 40px;
-            background: #fff;
+            background: var(--card-bg);
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
@@ -128,13 +142,15 @@ $user_data = mysqli_fetch_assoc($res);
         }
         
         .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color); }
         .form-group input {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 1rem;
+            background: var(--input-bg);
+            color: var(--text-color);
             transition: border-color 0.3s;
         }
         .form-group input:focus { outline: none; border-color: var(--secondary-color); }
@@ -164,6 +180,101 @@ $user_data = mysqli_fetch_assoc($res);
         .btn-back:hover { color: var(--primary-color); }
         .error-msg { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
         .success-msg { background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+
+        /* Order History Styles */
+        .orders-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        .orders-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        .orders-table-wrapper {
+            overflow-x: auto;
+        }
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .orders-table th, .orders-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .orders-table th {
+            background-color: #f9f9f9;
+            font-weight: 600;
+            color: #555;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .status-completed, .status-success { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-error, .status-failed { background: #f8d7da; color: #721c24; }
+        
+        .no-orders {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-style: italic;
+        }
+
+        /* Message History Styles */
+        .messages-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        .message-card {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .message-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .message-body {
+            font-size: 1rem;
+            color: #444;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+        .admin-reply-box {
+            background: #f0f7ff;
+            border-left: 4px solid #4a90e2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .admin-reply-box strong {
+            display: block;
+            font-size: 0.8rem;
+            color: #4a90e2;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .reply-content {
+            font-size: 0.95rem;
+            color: #333;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
@@ -177,6 +288,9 @@ $user_data = mysqli_fetch_assoc($res);
                 <ul class="nav-links">
                     <li><a href="index.php">Accueil</a></li>
                     <li><a href="menu.php">Menu</a></li>
+                    <li id="theme-toggle" style="margin-left: 15px; cursor: pointer;">
+                        <i class="fas fa-moon" style="font-size: 1.3rem; color: var(--primary-color);"></i>
+                    </li>
                     <?php if ($_SESSION['role'] === 'admin'): ?>
                         <li><a href="admin.php">Administration</a></li>
                     <?php endif; ?>
@@ -229,11 +343,82 @@ $user_data = mysqli_fetch_assoc($res);
                     <a href="index.php" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à l'accueil</a>
                 <?php endif; ?>
             </form>
+
+            <!-- Order History Section -->
+            <div class="orders-section">
+                <h3><i class="fas fa-history"></i> Mon Historique de Commandes</h3>
+                <?php if (empty($orders)): ?>
+                    <div class="no-orders">
+                        <i class="fas fa-info-circle"></i> Vous n'avez pas encore passé de commande.
+                    </div>
+                <?php else: ?>
+                    <div class="orders-table-wrapper">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Référence</th>
+                                    <th>Montant</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($orders as $order): ?>
+                                    <tr>
+                                        <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
+                                        <td><small><?php echo htmlspecialchars($order['payment_ref']); ?></small></td>
+                                        <td><strong><?php echo number_format($order['amount'], 2); ?> DT</strong></td>
+                                        <td>
+                                            <span class="status-badge status-<?php echo strtolower($order['status']); ?>">
+                                                <?php echo htmlspecialchars($order['status']); ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Messages Section -->
+            <div class="messages-section">
+                <h3><i class="fas fa-envelope"></i> Mes Messages & Réponses</h3>
+                <?php if (empty($messages)): ?>
+                    <div class="no-orders">
+                        <i class="fas fa-info-circle"></i> Vous n'avez pas encore envoyé de message.
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($messages as $m): ?>
+                        <div class="message-card">
+                            <div class="message-header">
+                                <span><i class="fas fa-calendar-alt"></i> <?php echo date('d/m/Y H:i', strtotime($m['created_at'])); ?></span>
+                                <?php if ($m['admin_reply']): ?>
+                                    <span style="color: #4a90e2; font-weight: 700;"><i class="fas fa-check-circle"></i> Répondu</span>
+                                <?php else: ?>
+                                    <span style="color: #D4A76A; font-weight: 700;"><i class="fas fa-clock"></i> En attente</span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="message-body"><?php echo htmlspecialchars($m['message']); ?></div>
+                            
+                            <?php if ($m['admin_reply']): ?>
+                                <div class="admin-reply-box">
+                                    <strong>Réponse de l'administrateur :</strong>
+                                    <div class="reply-content"><?php echo htmlspecialchars($m['admin_reply']); ?></div>
+                                    <div style="font-size: 0.75rem; color: #999; margin-top: 10px;">Le <?php echo date('d/m/Y H:i', strtotime($m['replied_at'])); ?></div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </div>
     </main>
 
     <?php include 'footer.php'; ?>
 
+    <script src="../js/theme.js"></script>
+    <script src="../js/shared.js"></script>
     <script>
         function previewImage(input) {
             if (input.files && input.files[0]) {

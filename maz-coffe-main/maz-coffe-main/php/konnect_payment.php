@@ -78,7 +78,14 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 
 $response = curl_exec($ch);
 $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curl_error = curl_error($ch);
 curl_close($ch);
+
+if ($response === false) {
+    file_put_contents('konnect_debug.log', date('Y-m-d H:i:s') . " - cURL Error: " . $curl_error . "\n", FILE_APPEND);
+    echo json_encode(['error' => 'Erreur de connexion cURL', 'details' => $curl_error]);
+    exit;
+}
 
 $result = json_decode($response, true);
 

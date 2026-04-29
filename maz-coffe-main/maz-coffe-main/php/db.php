@@ -33,10 +33,14 @@ mysqli_query($conn, $table_query);
 // AUTO-SETUP: Create contact_messages table if not exists
 $messages_query = "CREATE TABLE IF NOT EXISTS contact_messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NULL,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    admin_reply TEXT NULL,
+    replied_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 )";
 mysqli_query($conn, $messages_query);
 

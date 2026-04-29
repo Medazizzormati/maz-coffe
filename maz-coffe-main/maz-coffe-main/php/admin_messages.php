@@ -29,6 +29,23 @@ if (isset($_GET['delete_id'])) {
     exit;
 }
 
+// Handle Save Admin Reply
+if (isset($_POST['save_reply']) && isAdminLoggedIn()) {
+    $msg_id = intval($_POST['msg_id']);
+    $reply = mysqli_real_escape_string($conn, $_POST['admin_reply']);
+    
+    $query = "UPDATE contact_messages SET admin_reply = '$reply', replied_at = CURRENT_TIMESTAMP WHERE id = $msg_id";
+    if (mysqli_query($conn, $query)) {
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            header('Content-Type: application/json');
+            echo json_encode(['status' => 'success', 'message' => 'Réponse sauvegardée !']);
+            exit;
+        }
+        header("Location: admin_messages.php?msg=Réponse sauvegardée !");
+        exit;
+    }
+}
+
 // Fetch dashboard statistics
 $res = mysqli_query($conn, "SELECT COUNT(*) as count FROM products");
 $total_products = mysqli_fetch_assoc($res)['count'];
@@ -153,6 +170,9 @@ if ($result) {
                     <i class="fas fa-external-link-alt"></i> Voir le Site
                 </a>
                 <hr style="border: none; border-top: 1px solid #eee; margin: 15px 0;">
+                <a href="#" id="theme-toggle" class="admin-nav-item" style="cursor: pointer;">
+                    <i class="fas fa-moon"></i> Changer de Thème
+                </a>
                 <a href="logout.php" class="admin-nav-item" style="color: #e74c3c;">
                     <i class="fas fa-power-off"></i> Déconnexion
                 </a>
@@ -203,7 +223,7 @@ if ($result) {
                                     </td>
                                     <td>
                                         <div class="action-btns">
-                                            <button class="view-btn" onclick='openMessageDrawer(<?php echo json_encode($m); ?>)'>
+                                            <button class="view-btn" onclick='openMessageDrawer(<?php echo htmlspecialchars(json_encode($m), ENT_QUOTES, "UTF-8"); ?>)'>
                                                 <i class="fas fa-eye"></i> Voir message
                                             </button>
                                             <a href="admin_messages.php?delete_id=<?php echo $m['id']; ?>" class="action-btn delete-btn" title="Supprimer">
@@ -256,10 +276,22 @@ if ($result) {
                 <label>Message</label>
                 <div class="msg-drawer-content" id="v_content">...</div>
             </div>
+
+            <!-- Admin Reply Form -->
+            <div class="msg-info-group" style="margin-top: 30px; border-top: 2px solid #f0f0f0; padding-top: 20px;">
+                <label>Votre Réponse (Visible par le client)</label>
+                <form action="admin_messages.php" method="POST">
+                    <input type="hidden" name="msg_id" id="v_id">
+                    <textarea name="admin_reply" id="v_reply" rows="5" class="drawer-form-textarea" style="width: 100%; border: 2px solid #f0f0f0; border-radius: 12px; padding: 15px; margin-bottom: 15px;" placeholder="Écrivez votre réponse ici..."></textarea>
+                    <button type="submit" name="save_reply" class="btn-admin-add" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Envoyer la réponse
+                    </button>
+                </form>
+            </div>
             
             <div style="margin-top: 40px; text-align: right;">
-                <a href="#" id="v_mailto" class="btn-admin-add" style="text-decoration: none; display: inline-block;">
-                    <i class="fas fa-reply"></i> Répondre par Email
+                <a href="#" id="v_mailto" class="btn-back" style="text-decoration: none; display: inline-block; font-size: 0.9rem;">
+                    <i class="fas fa-envelope"></i> Ou répondre par Email externe
                 </a>
             </div>
         </div>
@@ -280,6 +312,10 @@ if ($result) {
             
             document.getElementById('v_content').innerText = data.message; // Preserves newlines thanks to white-space: pre-wrap
             
+            // Populate ID and existing reply
+            document.getElementById('v_id').value = data.id;
+            document.getElementById('v_reply').value = data.admin_reply || '';
+            
             // Setup Reply button
             document.getElementById('v_mailto').href = 'mailto:' + data.email + '?subject=Re: Contact M.A.Z Coffee House';
 
@@ -296,6 +332,7 @@ if ($result) {
         }
     </script>
     <script src="../js/shared.js"></script>
+    <script src="../js/theme.js"></script>
     <script src="../js/admin.js?v=1.1"></script>
 </body>
 </html>

@@ -63,6 +63,9 @@ while ($row = mysqli_fetch_assoc($result)) {
                 </li>
             <?php endif; ?>
             
+            <li id="theme-toggle" style="margin-left: 15px; cursor: pointer;">
+              <i class="fas fa-moon" style="font-size: 1.3rem; color: var(--primary-color);"></i>
+            </li>
             <li class="cart-icon-container" id="cart-nav" style="margin-left: 15px;">
               <i class="fas fa-shopping-basket cart-icon"></i>
               <span class="cart-badge hidden" id="cart-count">0</span>
@@ -217,6 +220,10 @@ while ($row = mysqli_fetch_assoc($result)) {
     <!-- PANNEAU PANIER COULISSANT -->
     <?php include 'cart_panel.php'; ?>
 
+    <script>
+        const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+    </script>
+    <script src="../js/theme.js"></script>
     <script src="../js/shared.js"></script>
     <script>
         // Override the static products with the database products
@@ -225,5 +232,3 @@ while ($row = mysqli_fetch_assoc($result)) {
     <script src="../js/menu.js"></script>
   </body>
 </html>
-
-
